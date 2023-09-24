@@ -2,3 +2,5 @@
 venv
 Test-net
 Main-net
+program/__pycache__
+.vscode

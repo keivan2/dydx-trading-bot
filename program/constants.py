@@ -28,7 +28,7 @@ USB_MIN_COLLATERAL = 1880
 # Thresholds - Closing
 CLOSE_AT_ZSCORE_CROSS = True
 
-# Ethereum Address
+# Ethereum Address GOERLI
 ETHEREUM_ADDRESS = "0xb717Fc1DAB20ae991f095290341A9C8E75DE4905"
 
 # KEY - Production
