@@ -3,7 +3,6 @@ from func_connections import connect_dydx
 from func_private import abort_all_positions
 
 if __name__ == "__main__":
-    
     # Connect to client
     try:
         print("Connecting to Client...")
