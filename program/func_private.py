@@ -5,6 +5,25 @@ from func_utils import format_number
 from pprint import pprint
 
 
+# Get exisiting open positions
+def is_open_positions(client, market):
+
+    #Protect API
+    time.sleep(2)
+
+    # Get positions
+    all_positions = client.private.get_positions(
+        market=market,
+        status="OPEN"
+    )
+
+    # Determine if open
+    if len(all_positions.data["positions"]) > 0:
+        return True
+    else:
+        return False
+
+
 # Check order status
 def check_order_status(client, order_id):
     order = client.private.get_order_by_id(order_id)

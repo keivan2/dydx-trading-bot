@@ -4,6 +4,7 @@ from statsmodels.tsa.stattools import coint
 import statsmodels.api as sm
 from constants import MAX_HALF_LIFE, WINDOW
 
+
 # Calculate Halflife
 def calculate_half_life(spread):
     df_spread = pd.DataFrame(spread, columns=["spread"])
@@ -28,6 +29,7 @@ def calculate_zscore(spread):
     zscore = (x - mean) / std
     return zscore
 
+
 # Calculate Cointehration
 def calculate_cointegration(series_1, series_2):
     series_1 = np.array(series_1).astype(np.float)
@@ -46,34 +48,38 @@ def calculate_cointegration(series_1, series_2):
     coint_flag = 1 if p_value < 0.05 and t_check else 0
     return coint_flag, hedge_ratio, half_life
 
-# Store Cointegrated Results
-def store_cointegrated_results(df_market_prices):
-    
+
+# Store Cointegration Results
+def store_cointegration_results(df_market_prices):
     # Initialize
     markets = df_market_prices.columns.to_list()
     criteria_met_pairs = []
 
     # Find cointegrated pairs
     # Start with our base pair
-    for index, base_market in enumerate(markets[:1]):
+    for index, base_market in enumerate(markets[:-1]):
         series_1 = df_market_prices[base_market].values.astype(float).tolist()
 
         # Get Quote Pair
-        for quote_market in markets[index +1:]:
+        for quote_market in markets[index + 1 :]:
             series_2 = df_market_prices[quote_market].values.astype(float).tolist()
 
             # Check cointegration
-            coint_flag, hedge_ratio, half_life = calculate_cointegration(series_1, series_2)
+            coint_flag, hedge_ratio, half_life = calculate_cointegration(
+                series_1, series_2
+            )
 
             # Log pair
             if coint_flag == 1 and half_life <= MAX_HALF_LIFE and half_life > 0:
-                criteria_met_pairs.append({
-                    "base_market": base_market,
-                    "quote_market": quote_market,
-                    "hedge_ratio": hedge_ratio,
-                    "half_life": half_life
-                })
-    
+                criteria_met_pairs.append(
+                    {
+                        "base_market": base_market,
+                        "quote_market": quote_market,
+                        "hedge_ratio": hedge_ratio,
+                        "half_life": half_life,
+                    }
+                )
+
     # Create and save DataFrame
     df_criteria_met = pd.DataFrame(criteria_met_pairs)
     df_criteria_met.to_csv("cointegrated_pairs.csv")
