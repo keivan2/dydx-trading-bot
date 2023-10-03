@@ -101,7 +101,6 @@ class BotAgent:
 
     # Open trades
     def open_trades(self):
-
         # Print status
         print("___")
         print(f"{self.market_1}: Placing first order...")
@@ -126,7 +125,7 @@ class BotAgent:
             self.order_dict["order_time_m1"] = datetime.now().isoformat()
         except Exception as e:
             self.order_dict["pair_status"] = "ERROR"
-            self.order_dict["comments"] = f"Market 1 {self.marker_1}: , {e}"
+            self.order_dict["comments"] = f"Market 1 {self.market_1}: , {e}"
             return self.order_dict
 
         # Ensure order is live before processing
@@ -137,10 +136,10 @@ class BotAgent:
             self.order_dict["pair_status"] = "ERROR"
             self.order_dict["comments"] = f"{self.market_1} failed to fill"
             return self.order_dict
-        
+
         # Print status - opening second order
         print("___")
-        print(f"{self.market_2}: Placing first order...")
+        print(f"{self.market_2}: Placing second order...")
         print(
             f"Side: {self.quote_side}, Size: {self.quote_size}, Price: {self.quote_price}"
         )
@@ -162,9 +161,9 @@ class BotAgent:
             self.order_dict["order_time_m2"] = datetime.now().isoformat()
         except Exception as e:
             self.order_dict["pair_status"] = "ERROR"
-            self.order_dict["comments"] = f"Market 2 {self.marker_2}: , {e}"
+            self.order_dict["comments"] = f"Market 2 {self.market_2}: , {e}"
             return self.order_dict
-        
+
         # Ensure order is live before processing
         order_status_m2 = self.check_order_status_by_id(self.order_dict["order_id_m2"])
 
@@ -172,7 +171,7 @@ class BotAgent:
         if order_status_m2 != "live":
             self.order_dict["pair_status"] = "ERROR"
             self.order_dict["comments"] = f"{self.market_2} failed to fill"
-        
+
             # Close order 1
             # side and size should be different, it is a buy, it should be sell
             try:
@@ -187,7 +186,9 @@ class BotAgent:
 
                 # Ensure order is live before proceeding
                 time.sleep(2)
-                order_status_close_order = check_order_status(self.client, close_order["order"]["id"])
+                order_status_close_order = check_order_status(
+                    self.client, close_order["order"]["id"]
+                )
                 if order_status_close_order != "FILLED":
                     print("ABORT PROGRAM")
                     print("Unexcpected Error")
@@ -199,7 +200,7 @@ class BotAgent:
                     exit(1)
             except Exception as e:
                 self.order_dict["pair_status"] = "ERROR"
-                self.order_dict["comments"] = f"Close Market 1 {self.marker_1}: , {e}"
+                self.order_dict["comments"] = f"Close Market 1 {self.market_1}: , {e}"
                 print("ABORT PROGRAM")
                 print("Unexcpected Error")
                 print(order_status_close_order)

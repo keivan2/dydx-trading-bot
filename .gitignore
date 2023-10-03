@@ -5,3 +5,4 @@ Main-net
 program/__pycache__
 .vscode
 cointegrated_pairs.csv
+bot_agents.json
