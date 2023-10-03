@@ -51,12 +51,12 @@ def manage_trade_exits(client):
 
         # Extract position matching information from file - market 1
         position_market_m1 = position["market_1"]
-        position_size_m1 = position["oder_m1_size"]
+        position_size_m1 = position["order_m1_size"]
         position_side_m1 = position["order_m1_side"]
 
         # Extract position matching information from file - market 1
         position_market_m2 = position["market_2"]
-        position_size_m2 = position["oder_m2_size"]
+        position_size_m2 = position["order_m2_size"]
         position_side_m2 = position["order_m2_side"]
 
 
