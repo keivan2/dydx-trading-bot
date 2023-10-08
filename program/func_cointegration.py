@@ -1,11 +1,13 @@
 import pandas as pd
 import numpy as np
-from statsmodels.tsa.stattools import coint
 import statsmodels.api as sm
+from statsmodels.tsa.stattools import coint
 from constants import MAX_HALF_LIFE, WINDOW
 
+# Calculate Half Life
+# https://www.pythonforfinance.net/2016/05/09/python-backtesting-mean-reversion-part-2/
 
-# Calculate Halflife
+
 def calculate_half_life(spread):
     df_spread = pd.DataFrame(spread, columns=["spread"])
     spread_lag = df_spread.spread.shift(1)
@@ -25,16 +27,14 @@ def calculate_zscore(spread):
     mean = spread_series.rolling(center=False, window=WINDOW).mean()
     std = spread_series.rolling(center=False, window=WINDOW).std()
     x = spread_series.rolling(center=False, window=1).mean()
-
     zscore = (x - mean) / std
     return zscore
 
 
-# Calculate Cointehration
+# Calculate Cointegration
 def calculate_cointegration(series_1, series_2):
     series_1 = np.array(series_1).astype(np.float)
     series_2 = np.array(series_2).astype(np.float)
-
     coint_flag = 0
     coint_res = coint(series_1, series_2)
     coint_t = coint_res[0]

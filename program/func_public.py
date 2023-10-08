@@ -1,12 +1,13 @@
 from constants import RESOLUTION
-from func_utils import get_ISO_Times
+from func_utils import get_ISO_times
 import pandas as pd
 import numpy as np
 import time
+
 from pprint import pprint
 
-# Get relevant time period from ISO from and to
-ISO_TIMES = get_ISO_Times()
+# Get relevant time periods for ISO from and to
+ISO_TIMES = get_ISO_times()
 
 
 # Get Candles recent
@@ -18,22 +19,19 @@ def get_candles_recent(client, market):
     time.sleep(0.2)
 
     # Get data
-    candles = client.public.get_candles(
-        market= market, 
-        resolution=RESOLUTION, 
-        limit=100
-    )
+    candles = client.public.get_candles(market=market, resolution=RESOLUTION, limit=100)
 
     # Structure data
     for candle in candles.data["candles"]:
         close_prices.append(candle["close"])
 
-    # Construct and retrun close price series
+    # Construct and return close price series
     close_prices.reverse()
-    price_result = np.array(close_prices).astype(np.float)
-    return price_result
+    prices_result = np.array(close_prices).astype(np.float)
+    return prices_result
 
 
+# Get Candles Historical
 def get_candles_historical(client, market):
     # Define output
     close_prices = []
@@ -84,7 +82,6 @@ def construct_market_prices(client):
     close_prices = get_candles_historical(client, tradeable_markets[0])
     df = pd.DataFrame(close_prices)
     df.set_index("datetime", inplace=True)
-    
 
     # Append other prices to DataFrame
     # You can limit the amount to loop though here to save time in development
@@ -102,5 +99,5 @@ def construct_market_prices(client):
         print(nans)
         df.drop(columns=nans, inplace=True)
 
-    # Retrun results
+    # Return result
     return df

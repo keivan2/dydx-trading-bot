@@ -14,17 +14,18 @@ from pprint import pprint
 def open_positions(client):
     """
     Manage finding triggers for trade entry
-    Store trades for meaning later on on exit function
+    Store trades for managing later on on exit function
     """
 
-    # Load cointegration pairs
+    # Load cointegrated pairs
     df = pd.read_csv("cointegrated_pairs.csv")
 
-    # Get market from referencing of min order size, tick size etc
+    # Get markets from referencing of min order size, tick size etc
     markets = client.public.get_markets().data
 
     # Initialize container for BotAgent results
     bot_agents = []
+
     # Opening JSON file
     try:
         open_positions_file = open("bot_agents.json")
@@ -33,7 +34,6 @@ def open_positions(client):
             bot_agents.append(p)
     except:
         bot_agents = []
-    
 
     # Find ZScore triggers
     for index, row in df.iterrows():
@@ -54,7 +54,7 @@ def open_positions(client):
 
             # Establish if potential trade
             if abs(z_score) >= ZSCORE_THRESH:
-                # Ensure lik-for-like not already open (diversify trading)
+                # Ensure like-for-like not already open (diversify trading)
                 is_base_open = is_open_positions(client, base_market)
                 is_quote_open = is_open_positions(client, quote_market)
 
@@ -146,10 +146,14 @@ def open_positions(client):
                             hedge_ratio=hedge_ratio,
                         )
 
-                        # Open trades
+                        # Open Trades
                         bot_open_dict = bot_agent.open_trades()
 
-                        # Handle success in openning trades
+                        # Guard: Handle failure
+                        if bot_open_dict == "failed":
+                            continue
+
+                        # Handle success in opening trades
                         if bot_open_dict["pair_status"] == "LIVE":
                             # Append to list of bot agents
                             bot_agents.append(bot_open_dict)

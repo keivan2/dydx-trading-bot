@@ -7,13 +7,11 @@ from func_entry_pairs import open_positions
 from func_exit_pairs import manage_trade_exits
 from func_messaging import send_message
 
+
+# MAIN FUNCTION
 if __name__ == "__main__":
-
-
     # Message on start
-    send_message("Bot launch seccessful")
-
-
+    send_message("Bot launch successful")
 
     # Connect to client
     try:
@@ -21,7 +19,7 @@ if __name__ == "__main__":
         client = connect_dydx()
     except Exception as e:
         print("Error connecting to client: ", e)
-        send_message("Failed to connect to client.")
+        send_message(f"Failed to connect to client {e}")
         exit(1)
 
     # Abort all open positions
@@ -30,21 +28,21 @@ if __name__ == "__main__":
             print("Closing all positions...")
             close_orders = abort_all_positions(client)
         except Exception as e:
-            print("Error closing all positions to cleint: ", e)
-            send_message(f"Failed to close all open positions {e}")
+            print("Error closing all positions: ", e)
+            send_message(f"Error closing all positions {e}")
             exit(1)
-            
+
     # Find Cointegrated Pairs
     if FIND_COINTEGRATED:
-
         # Construct Market Prices
         try:
             print("Fetching market prices, please allow 3 mins...")
             df_market_prices = construct_market_prices(client)
         except Exception as e:
             print("Error constructing market prices: ", e)
-            send_message(f"Error constructiong market prices {e}")
+            send_message(f"Error constructing market prices {e}")
             exit(1)
+
         # Store Cointegrated Pairs
         try:
             print("Storing cointegrated pairs...")
@@ -57,9 +55,8 @@ if __name__ == "__main__":
             send_message(f"Error saving cointegrated pairs {e}")
             exit(1)
 
-# Run as always on
+    # Run as always on
     while True:
-
         # Place trades for opening positions
         if MANAGE_EXITS:
             try:
@@ -69,7 +66,6 @@ if __name__ == "__main__":
                 print("Error managing exiting positions: ", e)
                 send_message(f"Error managing exiting positions {e}")
                 exit(1)
-
 
         # Place trades for opening positions
         if PLACE_TRADES:

@@ -1,17 +1,18 @@
 from datetime import datetime, timedelta
 
 
-# Fomrat number
+# Format number
 def format_number(curr_num, match_num):
-    # Give current number an example of number with decimals desired
-    # function will return the correctly formatted string
+    """
+    Give current number an example of number with decimals desired
+    Function will return the correctly formatted string
+    """
 
     curr_num_string = f"{curr_num}"
     match_num_string = f"{match_num}"
 
     if "." in match_num_string:
         match_decimals = len(match_num_string.split(".")[1])
-        # Second f for format, match curr_num with match_num
         curr_num_string = f"{curr_num:.{match_decimals}f}"
         curr_num_string = curr_num_string[:]
         return curr_num_string
@@ -25,7 +26,7 @@ def format_time(timestamp):
 
 
 # Get ISO Times
-def get_ISO_Times():
+def get_ISO_times():
     # Get timestamps
     date_start_0 = datetime.now()
     date_start_1 = date_start_0 - timedelta(hours=100)
@@ -50,8 +51,8 @@ def get_ISO_Times():
         "range_4": {
             "from_iso": format_time(date_start_4),
             "to_iso": format_time(date_start_3),
-        }
+        },
     }
-    
+
     # Return result
     return times_dict
