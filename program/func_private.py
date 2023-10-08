@@ -39,8 +39,8 @@ def place_market_order(client, market, side, size, price, reduce_only):
     # Get expiration time
     server_time = client.public.get_time()
     expiration = datetime.fromisoformat(
-        server_time.data["iso"].replace("Z", "")
-    ) + timedelta(seconds=70)
+        server_time.data["iso"].replace("Z", "+00:00")
+    ) + timedelta(seconds=80)
 
     # Place an order
     placed_order = client.private.create_order(
